@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -20,38 +21,50 @@ import lombok.Data;
 public class Libro  {
     @Id
     @NotNull
-    @Column(nullable = false, length = 13, name = "Isbn13", unique = true)
-    @OneToMany
+    @Column(nullable = false, length = 13, name = "isbn13", unique = true)
     private String isbn13;
 
     @NotNull
-    @Column(nullable = false, length = 128, name = "Titolo")
+    @Column(nullable = false, length = 128, name = "titolo")
     private String titolo;
 
     @NotNull
-    @Column(nullable = false, name = "Prezzo")
+    @Column(nullable = false, name = "prezzo")
     private Float prezzo;
 
     @NotNull
-    @Column(nullable = false, name = "Pagine")
+    @Column(nullable = false, name = "pagine")
     private Short pagine;
 
     @NotNull
-    @Column(nullable = false, length = 1024, name = "Descrizione")
+    @Column(nullable = false, length = 1024, name = "descrizione")
     private String descrizione;
 
     @NotNull
-    @Column(nullable = false, name = "Edizione")
+    @Column(nullable = false, name = "edizione")
     private Byte edizione;
 
     @NotNull
-    @Column(nullable = false, name = "AnnoEdizione")
+    @Column(nullable = false, name = "anno_edizione")
     private Year annoEdizione;
 
-    @Column(name = "Volume")
+    @Column(name = "volume")
     private Short volume;
+
+    // Associazioni
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "Voto", orphanRemoval = true)
-    @JoinColumn(name= "Libro")
-    private List<Voto> voti = new ArrayList<Voto>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "libro", orphanRemoval = true)
+    private List<Voto> voti = new ArrayList<>();
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name="autore", referencedColumnName="ID")
+    private Autore autore;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name="editore", referencedColumnName="ID")
+    private Editore editore;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name="lingua", referencedColumnName="cod_lingua")
+    private Lingua lingua;
 }

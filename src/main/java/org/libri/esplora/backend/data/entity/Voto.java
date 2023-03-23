@@ -24,14 +24,16 @@ public class Voto {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, name = "Valutazione")
+    @Column(nullable = false, name = "valutazione")
     private Byte valutazione;
 
     @NotNull
-    @Column(nullable = false, name = "DataEOra")
+    @Column(nullable = false, name = "data_ora")
     private LocalDateTime dataOra;
 
+    // Associazioni
+
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name="Libro", referencedColumnName="Isbn13")
+    @JoinColumn(name="libro", referencedColumnName="isbn13")
     private Libro libro;
 }
