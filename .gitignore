@@ -37,3 +37,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Generated frontend ###
+frontend/
+!frontend/css
+!frontend/js
+!frontend/themes
