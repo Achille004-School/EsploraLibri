@@ -7,19 +7,19 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name = "Libro")
-public class Libro  {
-    @Id
+@Table(name = "Libri")
+public class Libri extends EntitaAstratta {
     @NotNull
     @Column(nullable = false, length = 13, name = "isbn13", unique = true)
     private String isbn13;
@@ -54,17 +54,17 @@ public class Libro  {
     // Associazioni
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "libro", orphanRemoval = true)
-    private List<Voto> voti = new ArrayList<>();
+    private List<Voti> voti = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="autore", referencedColumnName="ID")
-    private Autore autore;
+    private Autori autore;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="editore", referencedColumnName="ID")
-    private Editore editore;
+    private Editori editore;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name="lingua", referencedColumnName="cod_lingua")
-    private Lingua lingua;
+    @JoinColumn(name="lingua", referencedColumnName="ID")
+    private Lingue lingua;
 }

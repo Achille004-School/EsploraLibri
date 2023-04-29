@@ -6,22 +6,20 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name = "Editore")
-public class Editore {
-    @Id
+@Table(name = "Lingue")
+public class Lingue extends EntitaAstratta {
     @NotNull
-    @GeneratedValue
-    @Column(nullable = false, name = "ID", unique = true)
-    private Long id;
+    @Column(nullable = false, name = "cod_lingua", length = 3, unique = true)
+    private String CodLingua;
 
     @NotNull
     @Column(nullable = false, length = 128, name = "nome")
@@ -29,6 +27,6 @@ public class Editore {
 
     // Associazioni
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "editore", orphanRemoval = true)
-    private List<Libro> libri = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lingua", orphanRemoval = true)
+    private List<Libri> libri = new ArrayList<>();
 }
