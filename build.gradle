@@ -17,6 +17,11 @@ configurations {
 
 repositories {
 	mavenCentral()
+    google()
+
+    // maven {
+    //     url 'https://jitpack.io'
+    // }
 }
 
 ext {
@@ -30,6 +35,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.vaadin:vaadin-spring-boot-starter'
+
+    // implementation 'com.github.VEINHORN.spring-data-sqlfile:sqlfile-processor:16e42f'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	

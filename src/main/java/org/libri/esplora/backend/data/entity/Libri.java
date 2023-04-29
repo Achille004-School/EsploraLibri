@@ -48,7 +48,7 @@ public class Libri extends EntitaAstratta {
     @Column(nullable = false, name = "anno_edizione")
     private Year annoEdizione;
 
-    @Column(name = "volume")
+    @Column(nullable = true, name = "volume")
     private Short volume;
 
     // Associazioni
@@ -63,6 +63,10 @@ public class Libri extends EntitaAstratta {
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="editore", referencedColumnName="ID")
     private Editori editore;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name="genere", referencedColumnName="ID")
+    private Generi genere;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="lingua", referencedColumnName="ID")

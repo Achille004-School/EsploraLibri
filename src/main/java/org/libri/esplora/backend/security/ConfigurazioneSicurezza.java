@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfiguration {
+public class ConfigurazioneSicurezza {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

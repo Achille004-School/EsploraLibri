@@ -15,18 +15,14 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name = "Lingue")
-public class Lingue extends EntitaAstratta {
+@Table(name = "Generi")
+public class Generi extends EntitaAstratta {
     @NotNull
-    @Column(nullable = false, name = "cod_lingua", length = 3, unique = true)
-    private String codLingua;
-
-    @NotNull
-    @Column(nullable = false, length = 128, name = "nome")
+    @Column(nullable = false, length = 255, name = "nome")
     private String nome;
 
     // Associazioni
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lingua", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "genere", orphanRemoval = true)
     private List<Libri> libri = new ArrayList<>();
 }

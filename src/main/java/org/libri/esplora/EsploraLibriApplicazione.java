@@ -13,11 +13,11 @@ import lombok.Getter;
 
 @SpringBootApplication
 @PWA(name="Esplora Libri", shortName="EsploraLibri")
-public class EsploraLibriApplication extends SpringBootServletInitializer implements AppShellConfigurator {
+public class EsploraLibriApplicazione extends SpringBootServletInitializer implements AppShellConfigurator {
     private static @Getter ConfigurableApplicationContext applicationContext;
 
 	public static void main(String[] args) throws Exception {
-        SpringApplicationBuilder app = new SpringApplicationBuilder(EsploraLibriApplication.class);
+        SpringApplicationBuilder app = new SpringApplicationBuilder(EsploraLibriApplicazione.class);
         app.build().addListeners(new ApplicationPidFileWriter("./bin/shutdown.pid"));
         applicationContext = app.run(args);
     }
