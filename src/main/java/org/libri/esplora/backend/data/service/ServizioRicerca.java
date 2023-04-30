@@ -2,6 +2,7 @@ package org.libri.esplora.backend.data.service;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 import org.libri.esplora.backend.data.repository.RepositoryLibri;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class ServizioRicerca {
         return repository.ricerca(parametroRicerca, valoreRicerca, annoMin, annoMax, prezzoMin, prezzoMax, pagineMin, pagineMax, valutazioneMin, genere, lingua);
     }
 
-    public RisultatoRicerca ricercaId(Long id) {
+    public Optional<RisultatoRicerca> ricercaId(Long id) {
         return repository.ricercaId(id);
     }
 }

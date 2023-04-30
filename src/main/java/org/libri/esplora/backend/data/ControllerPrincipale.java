@@ -2,10 +2,12 @@ package org.libri.esplora.backend.data;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.backend.data.service.ServizioRicerca;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,21 +47,21 @@ public class ControllerPrincipale {
     // }
 
     @GetMapping(path = "ricerca")
-    public List<RisultatoRicerca> ricerca(
+    public ResponseEntity<List<RisultatoRicerca>> ricerca(
             @RequestParam(defaultValue = "") String parametro_ricerca, @RequestParam(defaultValue = "") String valore_ricerca,
             @RequestParam(defaultValue = "-999999999") Year anno_min,  @RequestParam(defaultValue = "999999999") Year anno_max,
             @RequestParam(defaultValue = "0") Float prezzo_min,        @RequestParam(defaultValue = "999999999") Float prezzo_max,
             @RequestParam(defaultValue = "1") Short pagine_min,        @RequestParam(defaultValue = "32767") Short pagine_max,
-            @RequestParam(defaultValue = "0") Byte valutazione_min,
+            @RequestParam(defaultValue = "-1") Byte valutazione_min,
             @RequestParam(defaultValue = "") String genere,            @RequestParam(defaultValue = "") String lingua) {
         // TODO Controlli sui valori
 
-        // Questo restituisce un JSON o XML con i risultati della ricerca
-        return servizioRicerca.ricerca(parametro_ricerca, valore_ricerca, anno_min, anno_max, prezzo_min, prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua);
+        List<RisultatoRicerca> risultato = servizioRicerca.ricerca(parametro_ricerca, valore_ricerca, anno_min, anno_max, prezzo_min, prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua);
+        return ResponseEntity.ofNullable(risultato);
     }
 
     @GetMapping(path = "ricercaId")
-    public RisultatoRicerca ricercaId(@RequestParam Long id) {
-        return servizioRicerca.ricercaId(id);
+    public ResponseEntity<Optional<RisultatoRicerca>> ricercaId(@RequestParam Long id) {
+        return ResponseEntity.ofNullable(servizioRicerca.ricercaId(id));
     }
 }

@@ -12,9 +12,9 @@ SELECT Libri.ID AS idLibro,
     Generi.nome AS genere,
     Lingue.nome AS lingua,
     Lingue.cod_lingua AS codLingua,
-    AVG(Valutazione) AS valutazioneMedia
+    COALESCE(AVG(Valutazione), -1) AS valutazioneMedia
 FROM Libri
-    INNER JOIN Voti ON Libri.ID = Voti.libro
+    LEFT JOIN Voti ON Libri.ID = Voti.libro
     INNER JOIN Autori ON Libri.autore = Autori.ID
     INNER JOIN Editori ON Libri.editore = Editori.ID
     INNER JOIN Generi ON Libri.genere = Generi.ID
@@ -46,19 +46,6 @@ WHERE (
         Lingue.nome = ?11
         OR ?11 = ''
     )
-GROUP BY Libri.ID,
-    Libri.ean,
-    Libri.titolo,
-    Libri.prezzo,
-    Libri.pagine,
-    Libri.descrizione,
-    Libri.anno_edizione,
-    Libri.volume,
-    Libri.link,
-    autore,
-    Editori.nome,
-    Generi.nome,
-    Lingue.nome,
-    Lingue.cod_lingua
+GROUP BY Libri.ID
 HAVING valutazioneMedia >= ?9
 ORDER BY valutazioneMedia DESC
