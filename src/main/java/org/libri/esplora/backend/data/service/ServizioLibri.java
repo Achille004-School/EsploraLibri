@@ -1,11 +1,11 @@
 package org.libri.esplora.backend.data.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.libri.esplora.backend.data.entity.Libri;
 import org.libri.esplora.backend.data.repository.RepositoryLibri;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,25 +17,25 @@ public class ServizioLibri {
         this.repository = repository;
     }
 
-    public Libri saveOrUpdate(Libri entity) {
+    public Libri salvaOAggiorna(Libri entity) {
         return repository.save(entity);
     }
 
-    public void delete(Long id) {
+    public void elimina(Long id) {
         repository.deleteById(id);
     }
 
-    public Long count() {
+    public Long numRighe() {
         return repository.count();
     }
 
     // Find methods
 
-    public Optional<Libri> findById(Long id) {
+    public Optional<Libri> trovaPerId(Long id) {
         return repository.findById(id);
     }
 
-    public Iterable<Libri> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
+    public List<Libri> trovaTutti() {
+        return repository.findAll();
     }
 }

@@ -21,8 +21,8 @@ import lombok.EqualsAndHashCode;
 @Table(name = "Libri")
 public class Libri extends EntitaAstratta {
     @NotNull
-    @Column(nullable = false, length = 13, name = "isbn13", unique = true)
-    private String isbn13;
+    @Column(nullable = false, length = 13, name = "ean", unique = true)
+    private String ean;
 
     @NotNull
     @Column(nullable = false, length = 128, name = "titolo")
@@ -37,12 +37,8 @@ public class Libri extends EntitaAstratta {
     private Short pagine;
 
     @NotNull
-    @Column(nullable = false, length = 1024, name = "descrizione")
+    @Column(nullable = false, length = 8192, name = "descrizione")
     private String descrizione;
-
-    @NotNull
-    @Column(nullable = false, name = "edizione")
-    private Byte edizione;
 
     @NotNull
     @Column(nullable = false, name = "anno_edizione")
@@ -50,6 +46,10 @@ public class Libri extends EntitaAstratta {
 
     @Column(nullable = true, name = "volume")
     private Short volume;
+
+    @NotNull
+    @Column(nullable = false, length = 2048, name = "link")
+    private String link;
 
     // Associazioni
     

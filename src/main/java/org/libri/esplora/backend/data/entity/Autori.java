@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "Autori")
 public class Autori extends EntitaAstratta {
@@ -26,7 +26,7 @@ public class Autori extends EntitaAstratta {
     private String cognomeAutore;
 
     // Associazioni
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "autore", orphanRemoval = true)
     private List<Libri> libri = new ArrayList<>();
 }
