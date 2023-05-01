@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,10 +19,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name = "Libri")
+@Table(name = "Libri", uniqueConstraints = { @UniqueConstraint(columnNames = { "ean", "volume" }) })
 public class Libri extends EntitaAstratta {
     @NotNull
-    @Column(nullable = false, length = 13, name = "ean", unique = true)
+    @Column(nullable = false, length = 13, name = "ean")
     private String ean;
 
     @NotNull
