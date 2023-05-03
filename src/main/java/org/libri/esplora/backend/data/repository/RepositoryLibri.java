@@ -92,6 +92,7 @@ public interface RepositoryLibri extends RepositoryAstratta<Libri> {
             INNER JOIN Generi ON Libri.genere = Generi.ID
             INNER JOIN Lingue ON Libri.lingua = Lingue.ID
         WHERE Libri.ID = ?1
+        GROUP BY Libri.ID
     """, nativeQuery = true)
     Optional<RisultatoRicerca> ricercaId(Long id);
 }
