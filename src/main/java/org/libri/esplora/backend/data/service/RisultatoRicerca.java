@@ -16,4 +16,5 @@ public interface RisultatoRicerca {
     String getLingua();
     String getCodLingua();
     Float getValutazioneMedia();
+    Float getPertinenza();
 }

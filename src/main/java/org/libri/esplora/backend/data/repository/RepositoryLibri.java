@@ -24,45 +24,62 @@ public interface RepositoryLibri extends RepositoryAstratta<Libri> {
             Generi.nome AS genere,
             Lingue.nome AS lingua,
             Lingue.cod_lingua AS codLingua,
-            COALESCE(AVG(Valutazione), -1) AS valutazioneMedia
+            COALESCE(AVG(Valutazione), -1) AS valutazioneMedia,
+            (
+                CASE
+                    WHEN ?1 <> '' THEN (
+                        (
+                            CASE
+                                WHEN Libri.ean = ?1 THEN 20
+                                ELSE 0
+                            END
+                        ) + (
+                            CASE
+                                WHEN LOWER(Libri.titolo) LIKE LOWER(CONCAT('%', ?1, '%')) THEN 5
+                                ELSE 0
+                            END
+                        ) + (
+                            CASE
+                                WHEN LOWER(CONCAT(Autori.nome, ' ', Autori.cognome)) LIKE LOWER(CONCAT('%', ?1, '%')) THEN 3
+                                ELSE 0
+                            END
+                        ) + (
+                            CASE
+                                WHEN LOWER(Libri.descrizione) LIKE LOWER(CONCAT('%', ?1, '%')) THEN 1
+                                ELSE 0
+                            END
+                        )
+                    )
+                    ELSE 0
+                END
+            ) AS pertinenza
         FROM Libri
             LEFT JOIN Voti ON Libri.ID = Voti.libro
             INNER JOIN Autori ON Libri.autore = Autori.ID
             INNER JOIN Editori ON Libri.editore = Editori.ID
             INNER JOIN Generi ON Libri.genere = Generi.ID
             INNER JOIN Lingue ON Libri.lingua = Lingue.ID
-        WHERE (
-                (
-                    ?1 = 'ean'
-                    AND LOWER(Libri.ean) LIKE LOWER(CONCAT('%', ?2, '%'))
-                )
-                OR (
-                    ?1 = 'titolo'
-                    AND LOWER(Libri.titolo) LIKE LOWER(CONCAT('%', ?2, '%'))
-                )
-                OR (
-                    ?1 = 'autore'
-                    AND LOWER(CONCAT(Autori.nome, ' ', Autori.cognome)) LIKE LOWER(CONCAT('%', ?2, '%'))
-                )
-                OR ?1 = ''
-                OR ?2 = ''
-            )
-            AND Libri.anno_edizione BETWEEN ?3 AND ?4
-            AND Libri.prezzo BETWEEN ?5 AND ?6
-            AND Libri.pagine BETWEEN ?7 AND ?8
+        WHERE Libri.anno_edizione BETWEEN ?2 AND ?3
+            AND Libri.prezzo BETWEEN ?4 AND ?5
+            AND Libri.pagine BETWEEN ?6 AND ?7
             AND (
-                Generi.nome = ?10
+                Generi.nome = ?9
+                OR ?9 = ''
+            )
+            AND (
+                Lingue.nome = ?10
                 OR ?10 = ''
             )
-            AND (
-                Lingue.nome = ?11
-                OR ?11 = ''
-            )
         GROUP BY Libri.ID
-        HAVING valutazioneMedia >= ?9
-        ORDER BY valutazioneMedia DESC
+        HAVING valutazioneMedia >= ?8
+            AND (
+                ?1 = ''
+                OR pertinenza > 0
+            )
+        ORDER BY pertinenza DESC,
+            valutazioneMedia DESC
     """, nativeQuery = true)
-    List<RisultatoRicerca> ricerca(String parametroRicerca, String valoreRicerca, 
+    List<RisultatoRicerca> ricerca(String valoreRicerca, 
                                    Year annoMin, Year annoMax, 
                                    Float prezzoMin, Float prezzoMax, 
                                    Short pagineMin, Short pagineMax, 

@@ -48,7 +48,7 @@ public class ControllerPrincipale {
 
     @GetMapping(path = "ricerca")
     public ResponseEntity<List<RisultatoRicerca>> ricerca(
-            @RequestParam(defaultValue = "") String parametro_ricerca, @RequestParam(defaultValue = "") String valore_ricerca,
+            @RequestParam(defaultValue = "") String valore_ricerca,
             @RequestParam(defaultValue = "-999999999") Year anno_min,  @RequestParam(defaultValue = "999999999") Year anno_max,
             @RequestParam(defaultValue = "0") Float prezzo_min,        @RequestParam(defaultValue = "999999999") Float prezzo_max,
             @RequestParam(defaultValue = "1") Short pagine_min,        @RequestParam(defaultValue = "32767") Short pagine_max,
@@ -56,7 +56,7 @@ public class ControllerPrincipale {
             @RequestParam(defaultValue = "") String genere,            @RequestParam(defaultValue = "") String lingua) {
         // TODO Controlli sui valori
 
-        List<RisultatoRicerca> risultato = servizioRicerca.ricerca(parametro_ricerca, valore_ricerca, anno_min, anno_max, prezzo_min, prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua);
+        List<RisultatoRicerca> risultato = servizioRicerca.ricerca(valore_ricerca, anno_min, anno_max, prezzo_min, prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua);
         return ResponseEntity.ofNullable(risultato);
     }
 

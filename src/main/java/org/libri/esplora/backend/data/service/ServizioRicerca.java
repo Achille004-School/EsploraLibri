@@ -17,8 +17,8 @@ public class ServizioRicerca {
         this.repository = repository;
     }
 
-    public List<RisultatoRicerca> ricerca(String parametroRicerca, String valoreRicerca, Year annoMin, Year annoMax, Float prezzoMin, Float prezzoMax, Short pagineMin, Short pagineMax, Byte valutazioneMin, String genere, String lingua) {
-        return repository.ricerca(parametroRicerca, valoreRicerca, annoMin, annoMax, prezzoMin, prezzoMax, pagineMin, pagineMax, valutazioneMin, genere, lingua);
+    public List<RisultatoRicerca> ricerca(String valoreRicerca, Year annoMin, Year annoMax, Float prezzoMin, Float prezzoMax, Short pagineMin, Short pagineMax, Byte valutazioneMin, String genere, String lingua) {
+        return repository.ricerca(valoreRicerca, annoMin, annoMax, prezzoMin, prezzoMax, pagineMin, pagineMax, valutazioneMin, genere, lingua);
     }
 
     public Optional<RisultatoRicerca> ricercaId(Long id) {
