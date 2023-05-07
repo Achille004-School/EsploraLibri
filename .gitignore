@@ -39,7 +39,7 @@ out/
 .vscode/
 
 ### Generated frontend ###
-frontend/
-!frontend/css
-!frontend/js
-!frontend/themes
+/frontend/
+!/frontend/css
+!/frontend/js
+!/frontend/themes

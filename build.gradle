@@ -3,6 +3,8 @@ plugins {
 	id 'org.springframework.boot' version '3.0.4'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'com.vaadin' version '24.0.0'
+
+    id 'io.miret.etienne.sass' version '1.4.1'
 }
 
 group = 'org.libri'
@@ -18,10 +20,6 @@ configurations {
 repositories {
 	mavenCentral()
     google()
-
-    // maven {
-    //     url 'https://jitpack.io'
-    // }
 }
 
 ext {
@@ -36,7 +34,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.vaadin:vaadin-spring-boot-starter'
 
-    // implementation 'com.github.VEINHORN.spring-data-sqlfile:sqlfile-processor:16e42f'
+    implementation 'com.liferay:com.liferay.sass.compiler.dart:1.0.0'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
@@ -56,4 +54,47 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootRun {
+  dependsOn 'compileSass'
+}
+
+compileSass {
+    // Directory where to output generated CSS:
+    outputDir = project.file ("./frontend/css")
+
+    // Sub path where to copy generated CSS, eg relative to war root:
+    destPath = "."
+
+    // Source directory containing sass to compile:
+    sourceDir = project.file ("./src/main/sass")
+
+    // Adds a directory to sass load path (default is empty):
+    loadPath project.file ('sass-lib')
+    loadPath project.file ('/var/lib/compass')
+
+    // Set the output style (Possible values are “expanded” and “compressed”, default is “expanded”):
+    style = expanded
+
+    // Don’t emit a @charset for CSS with non-ASCII chars (default to emit):
+    noCharset ()
+
+    // When an error occurs, do not emit a stylesheet describing it (Default to emit):
+    noErrorCss ()
+
+    // Watch sass files in sourceDir for changes (Default is to not to watch, compile once and terminate):
+    // watch ()
+
+    // Prevent sass to emit warnings (Default is to emit them)
+    // quiet ()
+
+    // Source map style:
+    //  - file: output source map in a separate file (default)
+    //  - embed: embed source map in CSS
+    //  - none: do not emit source map.
+    sourceMap = file
+
+    // How to link source maps to source files [relative (default) or absolute]:
+    sourceMapUrls = relative
 }
