@@ -24,6 +24,7 @@ public class RisultatoRicerca {
             @JsonProperty("genere") String genere,
             @JsonProperty("lingua") String lingua,
             @JsonProperty("codLingua") String codLingua,
+            @JsonProperty("numeroValutazioni") Long numeroValutazioni,
             @JsonProperty("valutazioneMedia") Double valutazioneMedia) {
         this.idLibro = idLibro;
         this.ean = ean;
@@ -39,6 +40,7 @@ public class RisultatoRicerca {
         this.genere = genere;
         this.lingua = lingua;
         this.codLingua = codLingua;
+        this.numeroValutazioni = numeroValutazioni;
         this.valutazioneMedia = valutazioneMedia;
     }
 
@@ -56,5 +58,6 @@ public class RisultatoRicerca {
     private final String genere;
     private final String lingua;
     private final String codLingua;
+    private final Long numeroValutazioni;
     private final Double valutazioneMedia;
 }

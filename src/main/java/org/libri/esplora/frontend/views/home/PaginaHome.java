@@ -22,7 +22,7 @@ public class PaginaHome extends VerticalLayout {
         this.setId("home");
         this.setAlignItems(Alignment.START);
 
-        etichettaLibri = new Label("Elenco libri");
+        etichettaLibri = new Label();
 
         tuttiLibri = new Div();
         tuttiLibri.setId("libri");
@@ -31,7 +31,7 @@ public class PaginaHome extends VerticalLayout {
 
         // TODO Cercati recentemente e cosnigliati?
 
-        FormRicerca form = new FormRicerca(tuttiLibri);
+        FormRicerca form = new FormRicerca(etichettaLibri, tuttiLibri);
 
         this.add(form, etichettaLibri, tuttiLibri);
 

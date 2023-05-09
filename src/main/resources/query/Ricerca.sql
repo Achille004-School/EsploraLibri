@@ -13,6 +13,7 @@ SELECT new org.libri.esplora.backend.data.service.RisultatoRicerca(
         Generi.nome,
         Lingue.nome,
         Lingue.codLingua,
+        COUNT(Voti.valutazione),
         COALESCE(AVG(Voti.valutazione), -1)
     )
 FROM Libri Libri

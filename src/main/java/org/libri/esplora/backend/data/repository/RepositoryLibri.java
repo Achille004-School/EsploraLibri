@@ -25,6 +25,7 @@ public interface RepositoryLibri extends RepositoryAstratta<Libri> {
                 Generi.nome,
                 Lingue.nome,
                 Lingue.codLingua,
+                COUNT(Voti.valutazione),
                 COALESCE(AVG(Voti.valutazione), -1)
             )
         FROM Libri Libri
@@ -110,12 +111,12 @@ public interface RepositoryLibri extends RepositoryAstratta<Libri> {
                 END
             ) DESC,
             COALESCE(AVG(Voti.valutazione), -1) DESC
-    """)
+            """)
     List<RisultatoRicerca> ricerca(String valoreRicerca, 
                                    Year annoMin, Year annoMax, 
                                    Float prezzoMin, Float prezzoMax, 
                                    Short pagineMin, Short pagineMax, 
-                                   Byte valutazioneMin, 
+                                   Double valutazioneMin, 
                                    String genere, String lingua);
 
     @Query(value = """
@@ -134,6 +135,7 @@ public interface RepositoryLibri extends RepositoryAstratta<Libri> {
                 Generi.nome,
                 Lingue.nome,
                 Lingue.codLingua,
+                COUNT(Voti.valutazione),
                 COALESCE(AVG(Voti.valutazione), -1)
             )
         FROM Libri Libri
