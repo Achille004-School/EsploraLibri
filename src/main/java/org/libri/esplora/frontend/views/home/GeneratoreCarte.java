@@ -9,14 +9,24 @@ import com.vaadin.flow.component.html.Paragraph;
 
 public class GeneratoreCarte {
     public static Div of(RisultatoRicerca risultato) {
+        Short volumeLibro = risultato.getVolume();
+        String parteVolume;
+        if(volumeLibro != null) {
+            parteVolume = " (" + volumeLibro + "° vol.)";
+        } else {
+            parteVolume = "";
+        }
+
         Div carta = new Div();
         carta.setClassName("libro");
-        carta.add(new Bold(risultato.getTitolo()));
+        carta.add(new Bold(risultato.getTitolo() + parteVolume));
         carta.add(new Paragraph(risultato.getAutore()));
 
         Div contenitoreCarta = new Div(carta);
         contenitoreCarta.setClassName("contenitore_libro");
         contenitoreCarta.addClickListener(e -> UI.getCurrent().navigate("/api/ricercaId?id=" + risultato.getIdLibro()));
+
+        // TODO voto medio e prezzo
 
         return contenitoreCarta;
     }

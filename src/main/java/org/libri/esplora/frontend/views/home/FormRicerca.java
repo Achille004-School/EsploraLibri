@@ -81,7 +81,6 @@ public class FormRicerca extends FormLayout {
         tuttiLibri.removeAll();
 
         Div[] carte = GeneratoreCarte.ofArray(risposta.getBody());
-        // TODO Avvertire in caso di no risultati
         tuttiLibri.add(carte);
     }
 }
