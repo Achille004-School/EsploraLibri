@@ -1,9 +1,13 @@
-import{s as a,i as r,x as l,p as u,e as g,f as m,a as f}from"./indexhtml-fb2424dd.js";import{e as v}from"./custom-element-73470d87.js";function w(e){var o;const t=[];for(;e&&e.parentNode;){const i=y(e);if(i.nodeId!==-1){if((o=i.element)!=null&&o.tagName.startsWith("FLOW-CONTAINER-"))break;t.push(i)}e=e.parentElement?e.parentElement:e.parentNode.host}return t.reverse()}function y(e){const t=window.Vaadin;if(t&&t.Flow){const{clients:o}=t.Flow,i=Object.keys(o);for(const s of i){const n=o[s];if(n.getNodeId){const c=n.getNodeId(e);if(c>=0)return{nodeId:c,uiId:n.getUIId(),element:e}}}}return{nodeId:-1,uiId:-1,element:void 0}}var k=Object.defineProperty,E=Object.getOwnPropertyDescriptor,C=(e,t,o,i)=>{for(var s=i>1?void 0:i?E(t,o):t,n=e.length-1,c;n>=0;n--)(c=e[n])&&(s=(i?c(t,o,s):c(s))||s);return i&&s&&k(t,o,s),s};let p=class extends a{render(){return l`<div
+import{s as a,i as r,x as p,p as u,c as g,d as m,f}from"./indexhtml-b49a7d13.js";/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const v=e=>t=>typeof t=="function"?((o,i)=>(customElements.define(o,i),i))(e,t):((o,i)=>{const{kind:s,elements:n}=i;return{kind:s,elements:n,finisher(c){customElements.define(o,c)}}})(e,t);function w(e){var o;const t=[];for(;e&&e.parentNode;){const i=y(e);if(i.nodeId!==-1){if((o=i.element)!=null&&o.tagName.startsWith("FLOW-CONTAINER-"))break;t.push(i)}e=e.parentElement?e.parentElement:e.parentNode.host}return t.reverse()}function y(e){const t=window.Vaadin;if(t&&t.Flow){const{clients:o}=t.Flow,i=Object.keys(o);for(const s of i){const n=o[s];if(n.getNodeId){const c=n.getNodeId(e);if(c>=0)return{nodeId:c,uiId:n.getUIId(),element:e}}}}return{nodeId:-1,uiId:-1,element:void 0}}var k=Object.defineProperty,E=Object.getOwnPropertyDescriptor,C=(e,t,o,i)=>{for(var s=i>1?void 0:i?E(t,o):t,n=e.length-1,c;n>=0;n--)(c=e[n])&&(s=(i?c(t,o,s):c(s))||s);return i&&s&&k(t,o,s),s};let l=class extends a{render(){return p`<div
       tabindex="-1"
       @mousemove=${this.onMouseMove}
       @click=${this.onClick}
       @keydown=${this.onKeyDown}
-    ></div>`}onClick(e){const t=this.getTargetElement(e);this.dispatchEvent(new CustomEvent("shim-click",{detail:{target:t}}))}onMouseMove(e){const t=this.getTargetElement(e);this.dispatchEvent(new CustomEvent("shim-mousemove",{detail:{target:t}}))}onKeyDown(e){this.dispatchEvent(new CustomEvent("shim-keydown",{detail:{originalEvent:e}}))}getTargetElement(e){this.style.display="none";const t=document.elementFromPoint(e.clientX,e.clientY);return this.style.display="",t}};p.shadowRootOptions={...a.shadowRootOptions,delegatesFocus:!0};p.styles=[r`
+    ></div>`}onClick(e){const t=this.getTargetElement(e);this.dispatchEvent(new CustomEvent("shim-click",{detail:{target:t}}))}onMouseMove(e){const t=this.getTargetElement(e);this.dispatchEvent(new CustomEvent("shim-mousemove",{detail:{target:t}}))}onKeyDown(e){this.dispatchEvent(new CustomEvent("shim-keydown",{detail:{originalEvent:e}}))}getTargetElement(e){this.style.display="none";const t=document.elementFromPoint(e.clientX,e.clientY);return this.style.display="",t}};l.shadowRootOptions={...a.shadowRootOptions,delegatesFocus:!0};l.styles=[r`
       div {
         pointer-events: auto;
         background: rgba(255, 255, 255, 0);
@@ -11,10 +15,10 @@ import{s as a,i as r,x as l,p as u,e as g,f as m,a as f}from"./indexhtml-fb2424d
         inset: 0px;
         z-index: 1000000;
       }
-    `];p=C([v("vaadin-dev-tools-shim")],p);var b=Object.defineProperty,I=Object.getOwnPropertyDescriptor,d=(e,t,o,i)=>{for(var s=i>1?void 0:i?I(t,o):t,n=e.length-1,c;n>=0;n--)(c=e[n])&&(s=(i?c(t,o,s):c(s))||s);return i&&s&&b(t,o,s),s};let h=class extends a{constructor(){super(...arguments),this.active=!1,this.components=[],this.selected=0}connectedCallback(){super.connectedCallback();const e=new CSSStyleSheet;e.replaceSync(`
+    `];l=C([v("vaadin-dev-tools-shim")],l);var b=Object.defineProperty,I=Object.getOwnPropertyDescriptor,d=(e,t,o,i)=>{for(var s=i>1?void 0:i?I(t,o):t,n=e.length-1,c;n>=0;n--)(c=e[n])&&(s=(i?c(t,o,s):c(s))||s);return i&&s&&b(t,o,s),s};let h=class extends a{constructor(){super(...arguments),this.active=!1,this.components=[],this.selected=0}connectedCallback(){super.connectedCallback();const e=new CSSStyleSheet;e.replaceSync(`
     .vaadin-dev-tools-highlight {
       outline: 1px solid red
-    }`),document.adoptedStyleSheets=[...document.adoptedStyleSheets,e]}render(){return this.style.display=this.active?"block":"none",l`
+    }`),document.adoptedStyleSheets=[...document.adoptedStyleSheets,e]}render(){return this.style.display=this.active?"block":"none",p`
       <vaadin-dev-tools-shim
         @shim-click=${this.shimClick}
         @shim-mousemove=${this.shimMove}
@@ -33,7 +37,7 @@ import{s as a,i as r,x as l,p as u,e as g,f as m,a as f}from"./indexhtml-fb2424d
       </div>
       <div class="window popup component-picker-components-info">
         <div>
-          ${this.components.map((e,t)=>l`<div class=${t===this.selected?"selected":""}>
+          ${this.components.map((e,t)=>p`<div class=${t===this.selected?"selected":""}>
                 ${e.element.tagName.toLowerCase()}
               </div>`)}
         </div>

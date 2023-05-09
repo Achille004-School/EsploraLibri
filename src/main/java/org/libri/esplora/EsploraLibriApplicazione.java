@@ -25,4 +25,8 @@ public class EsploraLibriApplicazione extends SpringBootServletInitializer imple
         app.build().addListeners(new ApplicationPidFileWriter("./bin/shutdown.pid"));
         applicationContext = app.run(args);
     }
+
+    public static <T> T ottieniBean(Class<T> beanClass) {
+        return applicationContext.getBean(beanClass);
+    }
 }

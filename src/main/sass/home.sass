@@ -7,30 +7,52 @@ body
     margin: 0
     padding: 0
 
-    background: linear-gradient(to top, #0fd850 0%, #f9f047 100%)
-    background-size: cover
-    background-attachment: fixed
-
 #home
-    padding-top: 1em
 
-    & .contenitore_carta
-        width: calc(100% - 8em)
-        max-width: 100%
-        border: 1px solid transparent
+    & #tutti_libri
+        background: linear-gradient(to top, #0fd850 0%, #f9f047 100%)
+        background-size: cover
+        background-size: contain
+        background-attachment: fixed
 
-    & .carta
-        border: 1px solid white
-        background-color: black
-        color: white
-        margin: 1em 2em
-        padding: 1em 2em
-        width: 100%
-        height: min-content
+        padding: 1em 0em
 
-    & .carta:hover, & .carta:active
-        cursor: pointer
-        animation: allarga 0.25s linear forwards
+        // TODO scroll bar
+        // overflow-y: scroll
+
+        // &::-webkit-scrollbar-track
+        //     background-color: transparent
+        //     border: 1px solid black
+        //     border-radius: 10px
+        //     box-shadow: inset 0 0 6px black
+        //     -webkit-box-shadow: inset 0 0 6px black
+
+        // &::-webkit-scrollbar
+        //     width: 10px
+
+        // &::-webkit-scrollbar-thumb
+        //     background-color: white
+        //     border: 1px solid black
+        //     border-radius: 10px
+        //     box-shadow: inset 0 0 3px black
+        //     -webkit-box-shadow: inset 0 0 3px black
+
+        & .contenitore_carta
+            width: calc(100% - 8em - 10px)
+            border: 1px solid transparent
+
+            & .carta
+                border: 1px solid white
+                background-color: black
+                color: white
+                margin: 1em 2em
+                padding: 1em 2em
+                width: 100%
+                height: min-content
+
+                &:hover, &:active
+                    cursor: pointer
+                    animation: allarga 0.25s linear forwards
 
 @keyframes allarga
     from

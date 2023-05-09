@@ -43,3 +43,6 @@ out/
 !/frontend/css
 !/frontend/js
 !/frontend/themes
+
+### H2 Error Trace ###
+/database/h2.trace.db
