@@ -10,12 +10,12 @@ import com.vaadin.flow.component.html.Paragraph;
 public class GeneratoreCarte {
     public static Div of(RisultatoRicerca risultato) {
         Div carta = new Div();
-        carta.setClassName("carta");
+        carta.setClassName("libro");
         carta.add(new Bold(risultato.getTitolo()));
         carta.add(new Paragraph(risultato.getAutore()));
 
         Div contenitoreCarta = new Div(carta);
-        contenitoreCarta.setClassName("contenitore_carta");
+        contenitoreCarta.setClassName("contenitore_libro");
         contenitoreCarta.addClickListener(e -> UI.getCurrent().navigate("/api/ricercaId?id=" + risultato.getIdLibro()));
 
         return contenitoreCarta;

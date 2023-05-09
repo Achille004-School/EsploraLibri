@@ -59,12 +59,12 @@ public class FormRicerca extends FormLayout {
 
         String valGenere = genere.getValue();
         if(valGenere != null) {
-            richiesta += "&genere=" + valGenere + "";
+            richiesta += "&genere=" + valGenere;
         }
 
         String valLingua = lingua.getValue();
         if(valLingua != null) {
-            richiesta += "&lingua=" + valLingua + "";
+            richiesta += "&lingua=" + valLingua;
         }
 
         aggiornaRisultati(richiesta);
