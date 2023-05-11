@@ -19,6 +19,8 @@ public class PaginaHome extends VerticalLayout {
     private final Label etichettaLibri;
 
     public PaginaHome() {
+        super();
+
         this.setId("home");
         this.setAlignItems(Alignment.START);
 
