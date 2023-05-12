@@ -14,7 +14,7 @@ SELECT new org.libri.esplora.backend.data.service.RisultatoRicerca(
         Lingue.nome,
         Lingue.codLingua,
         COUNT(Voti.valutazione),
-        COALESCE(AVG(Voti.valutazione), -1)
+        COALESCE(AVG(Voti.valutazione), 0)
     )
 FROM Libri Libri
     LEFT JOIN Libri.voti Voti

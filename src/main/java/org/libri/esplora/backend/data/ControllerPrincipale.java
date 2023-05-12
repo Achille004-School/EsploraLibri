@@ -52,7 +52,7 @@ public class ControllerPrincipale {
             @RequestParam(defaultValue = "1950") Year anno_min,       @RequestParam(defaultValue = "2050") Year anno_max,
             @RequestParam(defaultValue = "0") Float prezzo_min,   @RequestParam(defaultValue = "9999") Float prezzo_max,
             @RequestParam(defaultValue = "1") Short pagine_min,             @RequestParam(defaultValue = "32767") Short pagine_max,
-            @RequestParam(defaultValue = "-1") Double valutazione_min,
+            @RequestParam(defaultValue = "0") Double valutazione_min,
             @RequestParam(defaultValue = "") String genere,                 @RequestParam(defaultValue = "") String lingua) {
         // TODO Controlli sui valori
 

@@ -14,7 +14,7 @@ SELECT new org.libri.esplora.backend.data.service.RisultatoRicerca(
         Lingue.nome,
         Lingue.codLingua,
         COUNT(Voti.valutazione),
-        COALESCE(AVG(Voti.valutazione), -1)
+        COALESCE(AVG(Voti.valutazione), 0)
     )
 FROM Libri Libri
     LEFT JOIN Libri.voti Voti
@@ -34,7 +34,7 @@ WHERE Libri.annoEdizione BETWEEN ?2 AND ?3
         OR ?10 = ''
     )
 GROUP BY Libri.ID
-HAVING COALESCE(AVG(Voti.valutazione), -1) >= ?8
+HAVING COALESCE(AVG(Voti.valutazione), 0) >= ?8
     AND (
         ?1 = ''
         OR (
@@ -98,4 +98,4 @@ ORDER BY (
             ELSE 0
         END
     ) DESC,
-    COALESCE(AVG(Voti.valutazione), -1) DESC
+    COALESCE(AVG(Voti.valutazione), 0) DESC

@@ -129,7 +129,7 @@ public class FormRicerca extends FormLayout {
         genere.setPrefixComponent(VaadinIcon.BOOKMARK.create());
         formFiltri.add(genere, 1);
 
-        valutazioneMin.setMin(-1);
+        valutazioneMin.setMin(0);
         valutazioneMin.setMax(5);
         valutazioneMin.setStep(0.5);
         valutazioneMin.setStepButtonsVisible(true);

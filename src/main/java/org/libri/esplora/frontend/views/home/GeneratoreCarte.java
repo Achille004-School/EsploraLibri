@@ -1,32 +1,50 @@
 package org.libri.esplora.frontend.views.home;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.frontend.VaadinComponents.Bold;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 
 public class GeneratoreCarte {
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
+
+    // TODO Gestire mobile
     public static Div of(RisultatoRicerca risultato) {
         Short volumeLibro = risultato.getVolume();
         String parteVolume;
-        if(volumeLibro != null) {
+        if (volumeLibro != null) {
             parteVolume = " (" + volumeLibro + "° vol.)";
         } else {
             parteVolume = "";
         }
 
-        Div carta = new Div();
-        carta.setClassName("libro");
-        carta.add(new Bold(risultato.getTitolo() + parteVolume));
-        carta.add(new Paragraph(risultato.getAutore()));
+        Div libro = new Div();
+        libro.setClassName("libro");
 
-        Div contenitoreCarta = new Div(carta);
+        Bold titoloPrezzo = new Bold(risultato.getTitolo() + parteVolume);
+        Span prezzo = new Span(DECIMAL_FORMAT.format(risultato.getPrezzo()).replace(".", ",") + " €");
+        prezzo.setClassName("prezzo");
+        titoloPrezzo.add(prezzo);
+        libro.add(titoloPrezzo);
+
+        Paragraph autoreVoto = new Paragraph(risultato.getAutore());
+        Span voto = new Span(GeneratoreCarte.creaStelle(risultato.getValutazioneMedia()).toArray(new Icon[5]));
+        voto.add(" (" + risultato.getNumeroValutazioni() + ")");
+        voto.setClassName("voto");
+        autoreVoto.add(voto);
+        libro.add(autoreVoto);
+
+        Div contenitoreCarta = new Div(libro);
         contenitoreCarta.setClassName("contenitore_libro");
         contenitoreCarta.addClickListener(e -> UI.getCurrent().navigate("/api/ricercaId?id=" + risultato.getIdLibro()));
-
-        // TODO voto medio e prezzo
 
         return contenitoreCarta;
     }
@@ -37,5 +55,31 @@ public class GeneratoreCarte {
             carte[i] = GeneratoreCarte.of(risultati[i]);
         }
         return carte;
+    }
+
+    private static ArrayList<Icon> creaStelle(Double valutazioneMedia) {
+        Long valutazioneArrotondata = Math.round(valutazioneMedia * 2);
+        ArrayList<Icon> stelle = new ArrayList<>();
+        int i = 0;
+
+        for(; i < valutazioneArrotondata / 2; i++) {
+            Icon stella = VaadinIcon.STAR.create();
+            stella.setClassName("stella" + i);
+            stelle.add(stella);
+        }
+        
+        if (valutazioneArrotondata % 2 == 1) {
+            Icon stella = VaadinIcon.STAR_HALF_LEFT_O.create();
+            stella.setClassName("stella" + ++i);
+            stelle.add(stella);
+        }
+
+        for(; i < 5; i++) {
+            Icon stella = VaadinIcon.STAR_O.create();
+            stella.setClassName("stella" + i);
+            stelle.add(stella);
+        }
+
+        return stelle;
     }
 }

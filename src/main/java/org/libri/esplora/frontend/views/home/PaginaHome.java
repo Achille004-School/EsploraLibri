@@ -31,15 +31,12 @@ public class PaginaHome extends VerticalLayout {
         tuttiLibri.setWidthFull();
         etichettaLibri.setFor(tuttiLibri);
 
-        // TODO Cercati recentemente e cosnigliati?
+        // TODO Cronologia ricerche? -> session
 
         FormRicerca form = new FormRicerca(etichettaLibri, tuttiLibri);
 
         this.add(form, etichettaLibri, tuttiLibri);
 
-        // TODO Cookies?
-        // if (authenticatedUser.get().isEmpty()) {
-        // this.add(new CookiesDiv());
-        // }
+        // TODO footer
     }
 }
