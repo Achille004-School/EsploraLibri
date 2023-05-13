@@ -13,7 +13,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -35,15 +37,17 @@ import jakarta.persistence.PersistenceUnit;
 
 @PageTitle("Libro")
 @Route(value = "libro/:idLibro?", layout = ImpaginazionePrincipale.class)
+@CssImport("./css/home.css")
 public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long> {
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
+    private static final DecimalFormat FORMATTATORE_EURO = new DecimalFormat("#.00");
 
     @PersistenceUnit
     private EntityManagerFactory cratoreGestoreEntita;
 
     public PaginaLibro() {
         super();
-        this.setAlignItems(Alignment.CENTER);
+        this.setHeightFull();
+        this.setPadding(false);
     }
 
     @Override
@@ -58,30 +62,35 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
     }
 
     private void agggiungiLibro(RisultatoRicerca libro) {
+        VerticalLayout layoutLibro = new VerticalLayout();
+        layoutLibro.setClassName("libro_visualizza");
+        layoutLibro.setAlignItems(Alignment.CENTER);
         if (libro != null) {
-            this.add(new H1(libro.getTitolo() + (libro.getVolume() != null ? " (" + libro.getVolume() + "° vol.)" : "")));
-            this.add(new H2(libro.getAutore()));
-            this.add(new H3(libro.getGenere()));
+            UI.getCurrent().getSession().setAttribute("ultimo_libro", libro);
+
+            layoutLibro.add(new H1(libro.getTitolo() + (libro.getVolume() != null ? " (" + libro.getVolume() + "° vol.)" : "")));
+            layoutLibro.add(new H2(libro.getAutore()));
+            layoutLibro.add(new H3(libro.getGenere()));
 
             if(!libro.getLink().equals("?")) {
-                this.add(new Paragraph(
-                    new Anchor(libro.getLink(), "Clicca qui per andare al sito "), 
-                    new Span(libro.getPrezzo() != -1 ? DECIMAL_FORMAT.format(libro.getPrezzo()).replace(".", ",") + " €" : "Prezzo non disponibile")));
+                layoutLibro.add(new Paragraph(
+                    new Anchor(libro.getLink(), "Clicca qui per andare al sito"), 
+                    new Span(" " + (libro.getPrezzo() != -1 ? FORMATTATORE_EURO.format(libro.getPrezzo()).replace(".", ",") + " €" : "Prezzo non disponibile"))));
             } else {
-                this.add(new Paragraph("Link e prezzo non disponibili"));
+                layoutLibro.add(new Paragraph("Link e prezzo non disponibili"));
             }
 
-            this.add(new Paragraph(libro.getEditore() + " (" + libro.getAnnoEdizione() + ") - " + (libro.getPagine() != -1 ? libro.getPagine() + " pagine" : "Pagine non disponibili")));
-            this.add(new Paragraph(libro.getLingua() + " (" + libro.getCodLingua() + ")"));
-            this.add(new Paragraph(libro.getEan()));
+            layoutLibro.add(new Paragraph(libro.getEditore() + " (" + libro.getAnnoEdizione() + ") - " + (libro.getPagine() != -1 ? libro.getPagine() + " pagine" : "Pagine non disponibili")));
+            layoutLibro.add(new Paragraph(libro.getLingua() + " (" + libro.getCodLingua() + ")"));
+            layoutLibro.add(new Paragraph(libro.getEan()));
 
             Paragraph descrizione = new Paragraph((!libro.getDescrizione().equals("?") ? libro.getDescrizione() : "Descrizone non disponibile"));
-            descrizione.setWidth("50em");
-            this.add(descrizione);
+            descrizione.setWidth("80%");
+            layoutLibro.add(descrizione);
 
             Paragraph voto = new Paragraph(GeneratoreCarte.creaStelle(libro.getValutazioneMedia()).toArray(new Icon[5]));
             voto.add(" (" + libro.getNumeroValutazioni() + ")");
-            this.add(voto);
+            layoutLibro.add(voto);
 
             IntegerField campoVoto = new IntegerField("Dacci la tua opinione su questo libro!", "Scrivi il voto da 1 a 5");
             campoVoto.setWidth("20em");
@@ -105,9 +114,17 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
                 }
             });
             campoVoto.setSuffixComponent(bottoneConferma);
-            this.add(campoVoto);
+            layoutLibro.add(campoVoto);
         } else {
-            this.add(new H1("Libro non trovato"));
+            layoutLibro.add(new H1("Libro non trovato"));
         }
+        this.add(layoutLibro);
+
+        RestTemplate modelloRest = new RestTemplate();
+        ResponseEntity<Double> risposta = modelloRest.exchange(
+                "http://localhost:8080/EsploraLibri/api/prezzo_medio", HttpMethod.GET, null,
+                new ParameterizedTypeReference<Double>() {
+                });
+        this.add(ImpaginazionePrincipale.creaFooter(risposta.getBody()));
     }
 }

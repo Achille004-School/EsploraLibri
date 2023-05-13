@@ -1,5 +1,6 @@
 package org.libri.esplora.backend.data.service;
 
+import java.io.Serializable;
 import java.time.Year;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class RisultatoRicerca {
+public class RisultatoRicerca implements Serializable {
     @JsonCreator
     public RisultatoRicerca(@JsonProperty("idLibro") Long idLibro,
             @JsonProperty("ean") String ean,

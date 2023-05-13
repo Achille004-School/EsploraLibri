@@ -14,15 +14,14 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 
 public class GeneratoreCarte {
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
+    private static final DecimalFormat FORMATTATORE_EURO = new DecimalFormat("#.00");
 
-    // TODO Gestire mobile
     public static Div of(RisultatoRicerca risultato) {
         Div libro = new Div();
         libro.setClassName("libro");
 
         Bold titoloPrezzo = new Bold(risultato.getTitolo() + (risultato.getVolume() != null ? " (" + risultato.getVolume() + "° vol.)" : ""));
-        Span prezzo = new Span(risultato.getPrezzo() != -1 ? DECIMAL_FORMAT.format(risultato.getPrezzo()).replace(".", ",") + " €" : "Non disponibile");
+        Span prezzo = new Span(risultato.getPrezzo() != -1 ? FORMATTATORE_EURO.format(risultato.getPrezzo()).replace(".", ",") + " €" : "Non disponibile");
         prezzo.setClassName("prezzo");
         titoloPrezzo.add(prezzo);
         libro.add(titoloPrezzo);
@@ -54,19 +53,19 @@ public class GeneratoreCarte {
         ArrayList<Icon> stelle = new ArrayList<>();
         int i = 0;
 
-        for(; i < valutazioneArrotondata / 2; i++) {
+        for (; i < valutazioneArrotondata / 2; i++) {
             Icon stella = VaadinIcon.STAR.create();
             stella.setClassName("stella" + i);
             stelle.add(stella);
         }
-        
+
         if (valutazioneArrotondata % 2 == 1) {
             Icon stella = VaadinIcon.STAR_HALF_LEFT_O.create();
             stella.setClassName("stella" + ++i);
             stelle.add(stella);
         }
 
-        for(; i < 5; i++) {
+        for (; i < 5; i++) {
             Icon stella = VaadinIcon.STAR_O.create();
             stella.setClassName("stella" + i);
             stelle.add(stella);
