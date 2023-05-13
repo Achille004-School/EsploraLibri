@@ -18,19 +18,11 @@ public class GeneratoreCarte {
 
     // TODO Gestire mobile
     public static Div of(RisultatoRicerca risultato) {
-        Short volumeLibro = risultato.getVolume();
-        String parteVolume;
-        if (volumeLibro != null) {
-            parteVolume = " (" + volumeLibro + "° vol.)";
-        } else {
-            parteVolume = "";
-        }
-
         Div libro = new Div();
         libro.setClassName("libro");
 
-        Bold titoloPrezzo = new Bold(risultato.getTitolo() + parteVolume);
-        Span prezzo = new Span(DECIMAL_FORMAT.format(risultato.getPrezzo()).replace(".", ",") + " €");
+        Bold titoloPrezzo = new Bold(risultato.getTitolo() + (risultato.getVolume() != null ? " (" + risultato.getVolume() + "° vol.)" : ""));
+        Span prezzo = new Span(risultato.getPrezzo() != -1 ? DECIMAL_FORMAT.format(risultato.getPrezzo()).replace(".", ",") + " €" : "Non disponibile");
         prezzo.setClassName("prezzo");
         titoloPrezzo.add(prezzo);
         libro.add(titoloPrezzo);
@@ -44,7 +36,7 @@ public class GeneratoreCarte {
 
         Div contenitoreCarta = new Div(libro);
         contenitoreCarta.setClassName("contenitore_libro");
-        contenitoreCarta.addClickListener(e -> UI.getCurrent().navigate("/api/ricercaId?id=" + risultato.getIdLibro()));
+        contenitoreCarta.addClickListener(evento -> UI.getCurrent().navigate("/libro/" + risultato.getIdLibro()));
 
         return contenitoreCarta;
     }
@@ -57,7 +49,7 @@ public class GeneratoreCarte {
         return carte;
     }
 
-    private static ArrayList<Icon> creaStelle(Double valutazioneMedia) {
+    public static ArrayList<Icon> creaStelle(Double valutazioneMedia) {
         Long valutazioneArrotondata = Math.round(valutazioneMedia * 2);
         ArrayList<Icon> stelle = new ArrayList<>();
         int i = 0;

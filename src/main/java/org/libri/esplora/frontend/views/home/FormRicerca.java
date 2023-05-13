@@ -48,8 +48,8 @@ public class FormRicerca extends FormLayout {
     private IntegerField pagineMin = new IntegerField("Pagine");
     private IntegerField pagineMax = new IntegerField();
     private NumberField valutazioneMin = new NumberField("Valutazione minima");
-    private Select<String> genere = new Select<>("Genere", e -> {});
-    private Select<String> lingua = new Select<>("Lingua", e -> {});
+    private Select<String> genere = new Select<>("Genere", evento -> {});
+    private Select<String> lingua = new Select<>("Lingua", evento -> {});
 
     private IntegerField quantitaRisultati = new IntegerField("Quantità risultati");
 
@@ -61,7 +61,7 @@ public class FormRicerca extends FormLayout {
         this.setSizeUndefined();
 
         bottoneRicerca = new Button(VaadinIcon.SEARCH.create());
-        bottoneRicerca.addClickListener(e -> processaForm());
+        bottoneRicerca.addClickListener(evento -> processaForm());
         bottoneRicerca.addClickShortcut(Key.ENTER);
         ricerca.setPrefixComponent(bottoneRicerca);
 
@@ -79,14 +79,14 @@ public class FormRicerca extends FormLayout {
         annoMin.setPlaceholder("Anno minimo");
         annoMin.setMin(1950);
         annoMin.setMax(2050);
-        annoMin.addValueChangeListener(e -> annoMax.setMin((e.getValue() != null) ? e.getValue() : 1950));
+        annoMin.addValueChangeListener(evento -> annoMax.setMin((evento.getValue() != null) ? evento.getValue() : 1950));
         annoMin.setSuffixComponent(VaadinIcon.CALENDAR.create());
         formFiltri.add(annoMin, 1);
 
         annoMax.setPlaceholder("Anno massimo");
         annoMax.setMin(1950);
         annoMax.setMax(2050);
-        annoMax.addValueChangeListener(e -> annoMin.setMax((e.getValue() != null) ? e.getValue() : 2050));
+        annoMax.addValueChangeListener(evento -> annoMin.setMax((evento.getValue() != null) ? evento.getValue() : 2050));
         annoMax.setSuffixComponent(VaadinIcon.CALENDAR.create());
         formFiltri.add(annoMax, 1);
 
@@ -95,14 +95,14 @@ public class FormRicerca extends FormLayout {
         prezzoMin.setPlaceholder("Prezzo minimo");
         prezzoMin.setMin(0);
         prezzoMin.setMax(9999);
-        prezzoMin.addValueChangeListener(e -> prezzoMax.setMin((e.getValue() != null) ? e.getValue() : 0));
+        prezzoMin.addValueChangeListener(evento -> prezzoMax.setMin((evento.getValue() != null) ? evento.getValue() : 0));
         prezzoMin.setSuffixComponent(VaadinIcon.MONEY.create());
         formFiltri.add(prezzoMin, 1);
 
         prezzoMax.setPlaceholder("Prezzo massimo");
         prezzoMax.setMin(0);
         prezzoMax.setMax(9999);
-        prezzoMax.addValueChangeListener(e -> prezzoMin.setMax((e.getValue() != null) ? e.getValue() : 9999));
+        prezzoMax.addValueChangeListener(evento -> prezzoMin.setMax((evento.getValue() != null) ? evento.getValue() : 9999));
         prezzoMax.setSuffixComponent(VaadinIcon.MONEY.create());
         formFiltri.add(prezzoMax, 1);
         
@@ -111,14 +111,14 @@ public class FormRicerca extends FormLayout {
         pagineMin.setPlaceholder("Pagine minime");
         pagineMin.setMin(1);
         pagineMin.setMax(Short.MAX_VALUE);
-        pagineMin.addValueChangeListener(e -> pagineMax.setMin((e.getValue() != null) ? e.getValue() : 1));
+        pagineMin.addValueChangeListener(evento -> pagineMax.setMin((evento.getValue() != null) ? evento.getValue() : 1));
         pagineMin.setSuffixComponent(VaadinIcon.OPEN_BOOK.create());
         formFiltri.add(pagineMin, 1);
 
         pagineMax.setPlaceholder("Pagine massime");
         pagineMax.setMin(1);
         pagineMax.setMax(Short.MAX_VALUE);
-        pagineMax.addValueChangeListener(e -> pagineMin.setMax((e.getValue() != null) ? e.getValue() : Short.MAX_VALUE));
+        pagineMax.addValueChangeListener(evento -> pagineMin.setMax((evento.getValue() != null) ? evento.getValue() : Short.MAX_VALUE));
         pagineMax.setSuffixComponent(VaadinIcon.OPEN_BOOK.create());
         formFiltri.add(pagineMax, 1);
 

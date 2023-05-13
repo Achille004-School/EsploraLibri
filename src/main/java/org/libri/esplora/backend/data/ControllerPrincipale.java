@@ -50,18 +50,21 @@ public class ControllerPrincipale {
     public ResponseEntity<List<RisultatoRicerca>> ricerca(
             @RequestParam(defaultValue = "") String valore_ricerca,
             @RequestParam(defaultValue = "1950") Year anno_min,       @RequestParam(defaultValue = "2050") Year anno_max,
-            @RequestParam(defaultValue = "0") Float prezzo_min,   @RequestParam(defaultValue = "9999") Float prezzo_max,
-            @RequestParam(defaultValue = "1") Short pagine_min,             @RequestParam(defaultValue = "32767") Short pagine_max,
+            @RequestParam(defaultValue = "-1") Float prezzo_min,   @RequestParam(defaultValue = "9999") Float prezzo_max,
+            @RequestParam(defaultValue = "-1") Short pagine_min,             @RequestParam(defaultValue = "32767") Short pagine_max,
             @RequestParam(defaultValue = "0") Double valutazione_min,
             @RequestParam(defaultValue = "") String genere,                 @RequestParam(defaultValue = "") String lingua) {
-        // TODO Controlli sui valori
-
         List<RisultatoRicerca> risultato = servizioRicerca.ricerca(valore_ricerca, anno_min, anno_max, prezzo_min, prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua);
         return ResponseEntity.ok(risultato);
     }
 
-    @GetMapping(path = "ricercaId")
+    @GetMapping(path = "ricerca_id")
     public ResponseEntity<Optional<RisultatoRicerca>> ricercaId(@RequestParam Long id) {
         return ResponseEntity.ofNullable(servizioRicerca.ricercaId(id));
+    }
+
+    @GetMapping(path = "prezzo_medio")
+    public ResponseEntity<Double> prezzoMedio() {
+        return ResponseEntity.ok(servizioRicerca.prezzoMedio());
     }
 }

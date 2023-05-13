@@ -24,4 +24,8 @@ public class ServizioRicerca {
     public Optional<RisultatoRicerca> ricercaId(Long id) {
         return repository.ricercaId(id);
     }
+
+    public Double prezzoMedio() {
+        return repository.prezzoMedio();
+    }
 }

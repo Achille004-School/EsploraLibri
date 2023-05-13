@@ -148,4 +148,7 @@ public interface RepositoryLibri extends RepositoryAstratta<Libri> {
         GROUP BY Libri.id
     """)
     Optional<RisultatoRicerca> ricercaId(Long id);
+
+    @Query(value = "SELECT AVG(Prezzo) FROM Libri WHERE Prezzo > -1", nativeQuery = true)
+    Double prezzoMedio();
 }

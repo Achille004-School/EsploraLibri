@@ -36,7 +36,5 @@ public class PaginaHome extends VerticalLayout {
         FormRicerca form = new FormRicerca(etichettaLibri, tuttiLibri);
 
         this.add(form, etichettaLibri, tuttiLibri);
-
-        // TODO footer
     }
 }

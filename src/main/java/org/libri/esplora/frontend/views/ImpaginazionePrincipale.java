@@ -68,3 +68,5 @@ public class ImpaginazionePrincipale extends AppLayout {
         return titolo == null ? "" : titolo.value();
     }
 }
+
+// TODO footer + prezzo medio
