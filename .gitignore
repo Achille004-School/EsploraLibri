@@ -49,3 +49,4 @@ out/
 
 ### For file analysis purposes ###
 dev-bundle/
+vite.generated.ts
