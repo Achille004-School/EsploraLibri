@@ -1,10 +1,7 @@
 package org.libri.esplora.frontend.views.libro;
 
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 
-import org.libri.esplora.backend.data.entity.Libri;
-import org.libri.esplora.backend.data.entity.Voti;
 import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.frontend.views.ImpaginazionePrincipale;
 import org.libri.esplora.frontend.views.home.GeneratoreCarte;
@@ -31,18 +28,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoIcon;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceUnit;
-
 @PageTitle("Libro")
 @Route(value = "libro/:idLibro?", layout = ImpaginazionePrincipale.class)
 @CssImport("./css/home.css")
 public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long> {
     private static final DecimalFormat FORMATTATORE_EURO = new DecimalFormat("#.00");
-
-    @PersistenceUnit
-    private EntityManagerFactory cratoreGestoreEntita;
 
     public PaginaLibro() {
         super();
@@ -68,47 +58,49 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
         if (libro != null) {
             UI.getCurrent().getSession().setAttribute("ultimo_libro", libro);
 
-            layoutLibro.add(new H1(libro.getTitolo() + (libro.getVolume() != null ? " (" + libro.getVolume() + "° vol.)" : "")));
+            layoutLibro.add(new H1(
+                    libro.getTitolo() + (libro.getVolume() != null ? " (" + libro.getVolume() + "° vol.)" : "")));
             layoutLibro.add(new H2(libro.getAutore()));
             layoutLibro.add(new H3(libro.getGenere()));
 
-            if(!libro.getLink().equals("?")) {
+            if (!libro.getLink().equals("?")) {
                 layoutLibro.add(new Paragraph(
-                    new Anchor(libro.getLink(), "Clicca qui per andare al sito"), 
-                    new Span(" " + (libro.getPrezzo() != -1 ? FORMATTATORE_EURO.format(libro.getPrezzo()).replace(".", ",") + " €" : "Prezzo non disponibile"))));
+                        new Anchor(libro.getLink(), "Clicca qui per andare al sito"),
+                        new Span(" " + (libro.getPrezzo() != -1
+                                ? FORMATTATORE_EURO.format(libro.getPrezzo()).replace(".", ",") + " €"
+                                : "Prezzo non disponibile"))));
             } else {
                 layoutLibro.add(new Paragraph("Link e prezzo non disponibili"));
             }
 
-            layoutLibro.add(new Paragraph(libro.getEditore() + " (" + libro.getAnnoEdizione() + ") - " + (libro.getPagine() != -1 ? libro.getPagine() + " pagine" : "Pagine non disponibili")));
+            layoutLibro.add(new Paragraph(libro.getEditore() + " (" + libro.getAnnoEdizione() + ") - "
+                    + (libro.getPagine() != -1 ? libro.getPagine() + " pagine" : "Pagine non disponibili")));
             layoutLibro.add(new Paragraph(libro.getLingua() + " (" + libro.getCodLingua() + ")"));
             layoutLibro.add(new Paragraph(libro.getEan()));
 
-            Paragraph descrizione = new Paragraph((!libro.getDescrizione().equals("?") ? libro.getDescrizione() : "Descrizone non disponibile"));
+            Paragraph descrizione = new Paragraph(
+                    (!libro.getDescrizione().equals("?") ? libro.getDescrizione() : "Descrizone non disponibile"));
             descrizione.setWidth("80%");
             layoutLibro.add(descrizione);
 
-            Paragraph voto = new Paragraph(GeneratoreCarte.creaStelle(libro.getValutazioneMedia()).toArray(new Icon[5]));
+            Paragraph voto = new Paragraph(
+                    GeneratoreCarte.creaStelle(libro.getValutazioneMedia()).toArray(new Icon[5]));
             voto.add(" (" + libro.getNumeroValutazioni() + ")");
             layoutLibro.add(voto);
 
-            IntegerField campoVoto = new IntegerField("Dacci la tua opinione su questo libro!", "Scrivi il voto da 1 a 5");
+            IntegerField campoVoto = new IntegerField("Dacci la tua opinione su questo libro!",
+                    "Scrivi il voto da 1 a 5");
             campoVoto.setWidth("20em");
             Button bottoneConferma = new Button(LumoIcon.CHECKMARK.create());
             bottoneConferma.addClickListener(evento -> {
                 Integer valoreVoto = campoVoto.getValue();
-                if(valoreVoto != null && valoreVoto >= 0 && valoreVoto <= 5){
-                    EntityManager gestoreEntita = cratoreGestoreEntita.createEntityManager();
-
-                    Voti votoDaSalvare = new Voti();
-                    votoDaSalvare.setValutazione((byte) valoreVoto.intValue());
-                    votoDaSalvare.setDataOra(LocalDateTime.now());
-                    votoDaSalvare.setLibro(gestoreEntita.find(Libri.class, libro.getIdLibro()));
-
-                    gestoreEntita.getTransaction().begin();
-                    gestoreEntita.persist(votoDaSalvare);
-                    gestoreEntita.getTransaction().commit();
-                    gestoreEntita.close();
+                if (valoreVoto != null && valoreVoto >= 0 && valoreVoto <= 5) {
+                    RestTemplate modelloRest = new RestTemplate();
+                    modelloRest.getForEntity(
+                            "http://localhost:8080/EsploraLibri/api/aggiungi_voto"
+                                    + "?id_libro=" + libro.getIdLibro()
+                                    + "&valutazione=" + valoreVoto.intValue(),
+                            Boolean.class);
 
                     bottoneConferma.setEnabled(false);
                 }

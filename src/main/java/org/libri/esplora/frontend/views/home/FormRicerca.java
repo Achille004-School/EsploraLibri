@@ -154,8 +154,8 @@ public class FormRicerca extends FormLayout {
     }
 
     private void processaForm() {
-        String richiesta = "http://localhost:8080/EsploraLibri/api/ricerca?"
-            + FormRicerca.creaParametro("valore_ricerca", ricerca.getValue())
+        String richiesta = "http://localhost:8080/EsploraLibri/api/ricerca"
+            + "?valore_ricerca=" + ricerca.getValue()
             + FormRicerca.creaParametro("anno_min", annoMin.getValue())
             + FormRicerca.creaParametro("anno_max", annoMax.getValue())
             + FormRicerca.creaParametro("prezzo_min", prezzoMin.getValue())

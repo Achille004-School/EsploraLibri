@@ -2,8 +2,6 @@ package org.libri.esplora.frontend.views.home;
 
 import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.frontend.views.ImpaginazionePrincipale;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -69,11 +67,7 @@ public class PaginaHome extends VerticalLayout {
         this.add(contenuto);
 
         RestTemplate modelloRest = new RestTemplate();
-        ResponseEntity<Double> risposta = modelloRest.exchange(
-                "http://localhost:8080/EsploraLibri/api/prezzo_medio", HttpMethod.GET, null,
-                new ParameterizedTypeReference<Double>() {
-                });
+        ResponseEntity<Double> risposta = modelloRest.getForEntity("http://localhost:8080/EsploraLibri/api/prezzo_medio", Double.class);
         this.add(ImpaginazionePrincipale.creaFooter(risposta.getBody()));
     }
-
 }
