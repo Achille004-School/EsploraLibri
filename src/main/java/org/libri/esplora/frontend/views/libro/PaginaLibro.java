@@ -91,10 +91,12 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
             IntegerField campoVoto = new IntegerField("Dacci la tua opinione su questo libro!",
                     "Scrivi il voto da 1 a 5");
             campoVoto.setWidth("20em");
+            campoVoto.setMin(1);
+            campoVoto.setMax(5);
             Button bottoneConferma = new Button(LumoIcon.CHECKMARK.create());
             bottoneConferma.addClickListener(evento -> {
                 Integer valoreVoto = campoVoto.getValue();
-                if (valoreVoto != null && valoreVoto >= 0 && valoreVoto <= 5) {
+                if (valoreVoto != null && valoreVoto >= 1 && valoreVoto <= 5) {
                     RestTemplate modelloRest = new RestTemplate();
                     modelloRest.getForEntity(
                             "http://localhost:8080/EsploraLibri/api/aggiungi_voto"
