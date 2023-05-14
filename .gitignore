@@ -46,3 +46,6 @@ out/
 
 ### H2 Error Trace ###
 /database/h2.trace.db
+
+### For file analysis purposes ###
+dev-bundle/
