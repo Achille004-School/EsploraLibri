@@ -30,10 +30,3 @@ public class EsploraLibriApplicazione extends SpringBootServletInitializer imple
         return applicationContext.getBean(beanClass);
     }
 }
-
-// TODO Libri
-// Gli dei dentro l'uomo (voto 4)
-// Letti per ita
-
-// Il codice Da Vinci
-// Il piccolo principe
