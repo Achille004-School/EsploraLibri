@@ -8,20 +8,27 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 public class ConfigurazioneSicurezza {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .anyRequest().permitAll()
-                .and()
-            .csrf().disable().authorizeHttpRequests() //.ignoringRequestMatchers("/h2-console/**")
-                .and()
-            .headers().frameOptions().disable()
-                .and()
-            .httpBasic();
+        http
+            .authorizeHttpRequests(requests -> { requests
+                .requestMatchers("/actuator/**", "/h2-console/**").permitAll()
+                .requestMatchers("/VAADIN/**").permitAll() // Perette a Vaadin di caricare il frontend
+                .requestMatchers("/", "/home", "/libro/**").permitAll() // Pagine
+                .requestMatchers("/api/**").permitAll() // Richieste REST
+                .anyRequest().denyAll();
+            })
+            .csrf(requests -> requests
+                .disable()
+            )
+            .headers(requests -> requests    
+                .xssProtection().and()
+                .frameOptions().disable()
+            );
 
         return http.build();
     }

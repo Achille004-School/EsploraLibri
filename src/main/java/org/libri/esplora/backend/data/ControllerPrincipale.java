@@ -1,5 +1,6 @@
 package org.libri.esplora.backend.data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
@@ -10,16 +11,24 @@ import org.libri.esplora.backend.data.entity.Voti;
 import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.backend.data.service.ServizioRicerca;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
+import lombok.Data;
 
 @Component
 @RestController // no need to specify @ResponseBody for @RequestMapping methods
@@ -56,7 +65,7 @@ public class ControllerPrincipale {
     //     return "OK:" + account.getId();
     // }
 
-    @GetMapping(path = "ricerca")
+    @GetMapping(path = "ricerca", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RisultatoRicerca>> ricerca(
             @RequestParam(defaultValue = "") String valore_ricerca,
             @RequestParam(defaultValue = "1950") Year anno_min,         @RequestParam(defaultValue = "2050") Year anno_max,
@@ -69,7 +78,7 @@ public class ControllerPrincipale {
         return ResponseEntity.ok(risultato);
     }
 
-    @GetMapping(path = "ricerca_id")
+    @GetMapping(path = "ricerca_id", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<RisultatoRicerca>> ricercaId(@RequestParam Long id) {
         return ResponseEntity.ofNullable(servizioRicerca.ricercaId(id));
     }
@@ -79,24 +88,36 @@ public class ControllerPrincipale {
         return ResponseEntity.ok(servizioRicerca.prezzoMedio());
     }
 
-    @GetMapping(path = "aggiungi_voto")
-    public ResponseEntity<Boolean> aggiungiLibro(@RequestParam() Long id_libro, @RequestParam Byte valutazione) {
+    @PostMapping(path = "aggiungi_voto", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> aggiungiLibro(@RequestBody InformazioniVoto infoVoto) {
         try {
             EntityManager gestoreEntita = cratoreGestoreEntita.createEntityManager();
 
             Voti votoDaSalvare = new Voti();
-            votoDaSalvare.setValutazione(valutazione);
+            votoDaSalvare.setValutazione(infoVoto.getValutazione());
             votoDaSalvare.setDataOra(LocalDateTime.now());
-            votoDaSalvare.setLibro(gestoreEntita.find(Libri.class, id_libro));
+            votoDaSalvare.setLibro(gestoreEntita.find(Libri.class, infoVoto.getIdLibro()));
 
             gestoreEntita.getTransaction().begin();
             gestoreEntita.persist(votoDaSalvare);
             gestoreEntita.getTransaction().commit();
             gestoreEntita.close();
 
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.unprocessableEntity().build();
+            return new ResponseEntity<>(Boolean.FALSE, HttpStatus.UNPROCESSABLE_ENTITY);
         }
+    }
+
+    @Data
+    static class InformazioniVoto implements Serializable {
+        @JsonCreator
+        public InformazioniVoto(@JsonProperty("id_libro") Long idLibro, @JsonProperty("valutazione") Byte valutazione) {
+            this.idLibro = idLibro;
+            this.valutazione = valutazione;
+        }
+
+        private final Long idLibro;
+        private final Byte valutazione;
     }
 }

@@ -2,7 +2,6 @@ package org.libri.esplora.frontend.views.home;
 
 import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.frontend.views.ImpaginazionePrincipale;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.vaadin.flow.component.UI;
@@ -67,7 +66,7 @@ public class PaginaHome extends VerticalLayout {
         this.add(contenuto);
 
         RestTemplate modelloRest = new RestTemplate();
-        ResponseEntity<Double> risposta = modelloRest.getForEntity("http://localhost:8080/EsploraLibri/api/prezzo_medio", Double.class);
-        this.add(ImpaginazionePrincipale.creaFooter(risposta.getBody()));
+        Double prezzoMedio = modelloRest.getForObject("http://localhost:8080/EsploraLibri/api/prezzo_medio", Double.class);
+        this.add(ImpaginazionePrincipale.creaFooter(prezzoMedio));
     }
 }

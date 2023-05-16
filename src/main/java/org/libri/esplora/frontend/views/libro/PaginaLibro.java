@@ -6,10 +6,14 @@ import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.frontend.views.ImpaginazionePrincipale;
 import org.libri.esplora.frontend.views.home.GeneratoreCarte;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.nimbusds.jose.shaded.json.JSONObject;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -33,11 +37,16 @@ import com.vaadin.flow.theme.lumo.LumoIcon;
 @CssImport("./css/home.css")
 public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long> {
     private static final DecimalFormat FORMATTATORE_EURO = new DecimalFormat("#.00");
+    private final HttpHeaders headerAggiuntaVoto;
 
     public PaginaLibro() {
         super();
+
         this.setHeightFull();
         this.setPadding(false);
+
+        headerAggiuntaVoto = new HttpHeaders();
+        headerAggiuntaVoto.setContentType(MediaType.APPLICATION_JSON);
     }
 
     @Override
@@ -98,13 +107,16 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
                 Integer valoreVoto = campoVoto.getValue();
                 if (valoreVoto != null && valoreVoto >= 1 && valoreVoto <= 5) {
                     RestTemplate modelloRest = new RestTemplate();
-                    modelloRest.getForEntity(
-                            "http://localhost:8080/EsploraLibri/api/aggiungi_voto"
-                                    + "?id_libro=" + libro.getIdLibro()
-                                    + "&valutazione=" + valoreVoto.intValue(),
-                            Boolean.class);
 
-                    bottoneConferma.setEnabled(false);
+                    JSONObject oggettoJsonVoto = new JSONObject();
+                    oggettoJsonVoto.put("id_libro", libro.getIdLibro());
+                    oggettoJsonVoto.put("valutazione", valoreVoto.intValue());
+
+                    HttpEntity<String> richiesta = new HttpEntity<String>(oggettoJsonVoto.toJSONString(), headerAggiuntaVoto);
+
+                    ResponseEntity<Boolean> risultato = modelloRest.postForEntity("http://localhost:8080/EsploraLibri/api/aggiungi_voto", richiesta, Boolean.class);
+
+                    bottoneConferma.setEnabled(!risultato.getBody());
                 }
             });
             campoVoto.setSuffixComponent(bottoneConferma);
@@ -115,10 +127,7 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
         this.add(layoutLibro);
 
         RestTemplate modelloRest = new RestTemplate();
-        ResponseEntity<Double> risposta = modelloRest.exchange(
-                "http://localhost:8080/EsploraLibri/api/prezzo_medio", HttpMethod.GET, null,
-                new ParameterizedTypeReference<Double>() {
-                });
-        this.add(ImpaginazionePrincipale.creaFooter(risposta.getBody()));
+        Double prezzoMedio = modelloRest.getForObject("http://localhost:8080/EsploraLibri/api/prezzo_medio", Double.class);
+        this.add(ImpaginazionePrincipale.creaFooter(prezzoMedio));
     }
 }
