@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,7 +25,9 @@ public class ConfigurazioneSicurezza {
                 .anyRequest().denyAll();
             })
             .csrf(requests -> requests
-                .disable()
+                .csrfTokenRepository(new CookieCsrfTokenRepository())
+                .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
+                .ignoringRequestMatchers("/", "/home", "/libro/**", "/actuator/**", "/h2-console/**")
             )
             .headers(requests -> requests    
                 .xssProtection().and()

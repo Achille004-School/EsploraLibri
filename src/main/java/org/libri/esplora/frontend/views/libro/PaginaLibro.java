@@ -107,6 +107,8 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
                 Integer valoreVoto = campoVoto.getValue();
                 if (valoreVoto != null && valoreVoto >= 1 && valoreVoto <= 5) {
                     RestTemplate modelloRest = new RestTemplate();
+                    String tokenCsrf = riceviTokenCsrf(modelloRest);
+                    headerAggiuntaVoto.add("XSRF-TOKEN", tokenCsrf);
 
                     JSONObject oggettoJsonVoto = new JSONObject();
                     oggettoJsonVoto.put("id_libro", libro.getIdLibro());
@@ -129,5 +131,9 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
         RestTemplate modelloRest = new RestTemplate();
         Double prezzoMedio = modelloRest.getForObject("http://localhost:8080/EsploraLibri/api/prezzo_medio", Double.class);
         this.add(ImpaginazionePrincipale.creaFooter(prezzoMedio));
+    }
+
+    private String riceviTokenCsrf(RestTemplate modelloRest) {
+        return modelloRest.getForObject("http://localhost:8080/EsploraLibri/api/token_csrf", String.class);
     }
 }

@@ -28,6 +28,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 
 @Component
@@ -87,9 +89,23 @@ public class ControllerPrincipale {
     public ResponseEntity<Double> prezzoMedio() {
         return ResponseEntity.ok(servizioRicerca.prezzoMedio());
     }
+    
+    @GetMapping(path = "token_csrf")
+    public ResponseEntity<String> ottieniTokenCsrf(HttpServletRequest request) {
+        for(Cookie cookie : request.getCookies()) {
+            if(cookie.getName().equals("XSRF-TOKEN")) {
+                System.out.println(cookie.getName() + "=" + cookie.getValue());
+                return ResponseEntity.ok(cookie.getValue());
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 
     @PostMapping(path = "aggiungi_voto", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> aggiungiLibro(@RequestBody InformazioniVoto infoVoto) {
+        // DEBUG System.out.println("CIAO");
+
         try {
             EntityManager gestoreEntita = cratoreGestoreEntita.createEntityManager();
 
