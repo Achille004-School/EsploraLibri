@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,15 +17,17 @@ public class ConfigurazioneSicurezza {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(requests -> { requests
-                .requestMatchers("/actuator/**", "/h2-console/**").permitAll()
+            .authorizeHttpRequests(requests -> requests
+                .requestMatchers("/actuator/**", "/h2-console/**").permitAll() // Endpoint di Spring (TODO h2-console 403 Foridden)
                 .requestMatchers("/VAADIN/**").permitAll() // Perette a Vaadin di caricare il frontend
                 .requestMatchers("/", "/home", "/libro/**").permitAll() // Pagine
                 .requestMatchers("/api/**").permitAll() // Richieste REST
-                .anyRequest().denyAll();
-            })
+                .anyRequest().denyAll()
+            )
             .csrf(requests -> requests
-                .disable()
+                .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+                .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
+                .ignoringRequestMatchers("/", "/home", "/libro/**", "/actuator/**", "/h2-console/**") // TODO verificare actuator/shutdown
             )
             .headers(requests -> requests    
                 .xssProtection().and()
@@ -39,7 +43,7 @@ public class ConfigurazioneSicurezza {
     // }
 
     @Bean
-    public WebMvcConfigurer getWebMvcConfigurer() {
+    public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {

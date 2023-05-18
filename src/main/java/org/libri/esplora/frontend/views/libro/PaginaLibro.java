@@ -6,17 +6,14 @@ import org.libri.esplora.backend.data.service.RisultatoRicerca;
 import org.libri.esplora.frontend.views.ImpaginazionePrincipale;
 import org.libri.esplora.frontend.views.home.GeneratoreCarte;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JavaScript;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -30,23 +27,21 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.lumo.LumoIcon;
 
 @PageTitle("Libro")
 @Route(value = "libro/:idLibro?", layout = ImpaginazionePrincipale.class)
 @CssImport("./css/home.css")
+@JavaScript("https://code.jquery.com/jquery-3.7.0.js")
 public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long> {
     private static final DecimalFormat FORMATTATORE_EURO = new DecimalFormat("#.00");
-    private final HttpHeaders headerAggiuntaVoto;
 
     public PaginaLibro() {
         super();
 
         this.setHeightFull();
         this.setPadding(false);
-
-        headerAggiuntaVoto = new HttpHeaders();
-        headerAggiuntaVoto.setContentType(MediaType.APPLICATION_JSON);
     }
 
     @Override
@@ -65,7 +60,10 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
         layoutLibro.setClassName("libro_visualizza");
         layoutLibro.setAlignItems(Alignment.CENTER);
         if (libro != null) {
-            UI.getCurrent().getSession().setAttribute("ultimo_libro", libro);
+            VaadinSession sessione = VaadinSession.getCurrent();
+            sessione.lock();
+            sessione.setAttribute("ultimo_libro", libro);
+            sessione.unlock();
 
             layoutLibro.add(new H1(
                     libro.getTitolo() + (libro.getVolume() != null ? " (" + libro.getVolume() + "° vol.)" : "")));
@@ -106,17 +104,38 @@ public class PaginaLibro extends VerticalLayout implements HasUrlParameter<Long>
             bottoneConferma.addClickListener(evento -> {
                 Integer valoreVoto = campoVoto.getValue();
                 if (valoreVoto != null && valoreVoto >= 1 && valoreVoto <= 5) {
-                    RestTemplate modelloRest = new RestTemplate();
+                    UI.getCurrent().getPage().executeJs("""
+                        var data = {
+                            id_libro: $0,
+                            valutazione: $1
+                        }
+                        
+                        var csfrHeader = $(\"meta[name='_csrf_header']\").attr('content');
+                        var csfrToken = $(\"meta[name='_csrf']\").attr('content');
+                        
+                        console.log('Utilizzando il token: ' + csfrHeader + '\\n' + csfrToken);
+                        $.ajaxSetup({
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(csfrHeader, csfrToken);
+                            }
+                        });
+                        
+                        $.ajax({
+                            url: 'http://localhost:8080/EsploraLibri/api/aggiungi_voto',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (data) {
+                                console.log('Voto aggiunto.');
+                            },
+                            error: function (data) {
+                                console.log(\"Errore durante l'invio del voto!\");
+                            }
+                        });
+                        """, libro.getIdLibro().toString(), valoreVoto.toString());
 
-                    JSONObject oggettoJsonVoto = new JSONObject();
-                    oggettoJsonVoto.put("id_libro", libro.getIdLibro());
-                    oggettoJsonVoto.put("valutazione", valoreVoto.intValue());
-
-                    HttpEntity<String> richiesta = new HttpEntity<String>(oggettoJsonVoto.toJSONString(), headerAggiuntaVoto);
-
-                    ResponseEntity<Boolean> risultato = modelloRest.postForEntity("http://localhost:8080/EsploraLibri/api/aggiungi_voto", richiesta, Boolean.class);
-
-                    bottoneConferma.setEnabled(!risultato.getBody());
+                    bottoneConferma.setEnabled(false);
+                    // UI.getCurrent().getPage().reload();
                 }
             });
             campoVoto.setSuffixComponent(bottoneConferma);

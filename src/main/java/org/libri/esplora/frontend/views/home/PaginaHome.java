@@ -32,8 +32,11 @@ public class PaginaHome extends VerticalLayout {
         this.setPadding(false);
         this.setAlignItems(Alignment.START);
 
+        
         VaadinSession sessione = UI.getCurrent().getSession();
+        sessione.lock();
         RisultatoRicerca ultimoLibro = (RisultatoRicerca) sessione.getAttribute("ultimo_libro");
+        sessione.unlock();
 
         // DEBUG (anche detto non saper farmi i cazzi miei)
         // WebBrowser browserSessione = sessione.getBrowser();
