@@ -71,11 +71,11 @@ public class ControllerPrincipale {
             @RequestParam(defaultValue = "1950") Year anno_min,         @RequestParam(defaultValue = "2050") Year anno_max,
             @RequestParam(defaultValue = "-1") Float prezzo_min,        @RequestParam(defaultValue = "9999") Float prezzo_max,
             @RequestParam(defaultValue = "-1") Short pagine_min,        @RequestParam(defaultValue = "32767") Short pagine_max,
-            @RequestParam(defaultValue = "0") Double valutazione_min,
-            @RequestParam(defaultValue = "") String genere,             @RequestParam(defaultValue = "") String lingua) {
-        List<RisultatoRicerca> risultato = servizioRicerca.ricerca(valore_ricerca, anno_min, anno_max, prezzo_min,
-                prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua);
-        return ResponseEntity.ok(risultato);
+            @RequestParam(defaultValue = "0") Double valutazione_min,   @RequestParam(defaultValue = "") String genere,             
+            @RequestParam(defaultValue = "") String lingua,             @RequestParam(defaultValue = "10") Integer max_risultati) {
+        return ResponseEntity.ok(
+            servizioRicerca.ricerca(valore_ricerca, anno_min, anno_max, prezzo_min, prezzo_max, pagine_min, pagine_max, valutazione_min, genere, lingua, max_risultati)
+        );
     }
 
     @GetMapping(path = "ricerca_id", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,7 +103,7 @@ public class ControllerPrincipale {
             gestoreEntita.getTransaction().commit();
             gestoreEntita.close();
 
-            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(Boolean.FALSE, HttpStatus.UNPROCESSABLE_ENTITY);
         }

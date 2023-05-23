@@ -22,5 +22,5 @@ FROM Libri Libri
     INNER JOIN Libri.editore Editori
     INNER JOIN Libri.genere Generi
     INNER JOIN Libri.lingua Lingue
-WHERE Libri.id = ?1
+WHERE Libri.id IN ?1
 GROUP BY Libri.id

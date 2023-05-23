@@ -38,7 +38,7 @@ public class PaginaHome extends VerticalLayout {
         RisultatoRicerca ultimoLibro = (RisultatoRicerca) sessione.getAttribute("ultimo_libro");
         sessione.unlock();
 
-        // DEBUG (anche detto non saper farmi i cazzi miei)
+        // DEBUG Per ottenere informazioni del browser client
         // WebBrowser browserSessione = sessione.getBrowser();
         // StringBuilder strb = new StringBuilder()
         //     .append(browserSessione.getAddress() + " - ")

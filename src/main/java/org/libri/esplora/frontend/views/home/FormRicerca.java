@@ -1,7 +1,6 @@
 package org.libri.esplora.frontend.views.home;
 
 import java.time.Year;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.libri.esplora.EsploraLibriApplicazione;
@@ -164,14 +163,15 @@ public class FormRicerca extends FormLayout {
             + FormRicerca.creaParametro("pagine_max", pagineMax.getValue())
             + FormRicerca.creaParametro("valutazione_min", valutazioneMin.getValue())
             + FormRicerca.creaParametro("genere", genere.getValue())
-            + FormRicerca.creaParametro("lingua", lingua.getValue());
+            + FormRicerca.creaParametro("lingua", lingua.getValue())
+            + FormRicerca.creaParametro("max_risultati", quantitaRisultati.getValue());
 
             
-        aggiornaRisultati(richiesta, quantitaRisultati.getValue());
+        aggiornaRisultati(richiesta);
         filtri.setOpened(false);
     }
 
-    private void aggiornaRisultati(String richiesta, int risultati) {
+    private void aggiornaRisultati(String richiesta) {
         // DEBUG System.out.println("Richiesta REST: " + richiesta);
 
         RestTemplate modelloRest = new RestTemplate();
@@ -179,13 +179,13 @@ public class FormRicerca extends FormLayout {
                 new ParameterizedTypeReference<RisultatoRicerca[]>() {
                 });
 
-        tuttiLibri.removeAll();
-
+        
         Div[] libri = GeneratoreCarte.ofArray(risposta.getBody());
-        int indiceMassimo = (risultati < libri.length) ? risultati : libri.length;
-
-        etichettaLibri.setText("Elenco libri (" + indiceMassimo + " risultato/i)");
-        tuttiLibri.add(Arrays.copyOfRange(libri, 0, indiceMassimo));
+        etichettaLibri.setText("Elenco libri (" + libri.length + " risultato/i)");
+        
+        
+        tuttiLibri.removeAll();
+        tuttiLibri.add(libri);
     }
 
     private static String creaParametro(String nomeParametro, Object valoreParametro) {

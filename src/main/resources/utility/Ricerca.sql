@@ -1,28 +1,11 @@
-SELECT new org.libri.esplora.backend.data.service.RisultatoRicerca(
-        Libri.id,
-        Libri.ean,
-        Libri.titolo,
-        Libri.prezzo,
-        Libri.pagine,
-        Libri.descrizione,
-        Libri.annoEdizione,
-        Libri.volume,
-        Libri.link,
-        CONCAT(Autori.nomeAutore, ' ', Autori.cognomeAutore),
-        Editori.nome,
-        Generi.nome,
-        Lingue.nome,
-        Lingue.codLingua,
-        COUNT(Voti.valutazione),
-        COALESCE(AVG(Voti.valutazione), 0)
-    )
-FROM Libri Libri
-    LEFT JOIN Libri.voti Voti
-    INNER JOIN Libri.autore Autori
-    INNER JOIN Libri.editore Editori
-    INNER JOIN Libri.genere Generi
-    INNER JOIN Libri.lingua Lingue
-WHERE Libri.annoEdizione BETWEEN ?2 AND ?3
+SELECT Libri.ID
+FROM Libri
+    LEFT JOIN Voti ON Libri.ID = Voti.libro
+    INNER JOIN Autori ON Libri.autore = Autori.ID
+    INNER JOIN Editori ON Libri.editore = Editori.ID
+    INNER JOIN Generi ON Libri.genere = Generi.ID
+    INNER JOIN Lingue ON Libri.lingua = Lingue.ID
+WHERE Libri.anno_edizione BETWEEN ?2 AND ?3
     AND Libri.prezzo BETWEEN ?4 AND ?5
     AND Libri.pagine BETWEEN ?6 AND ?7
     AND (
@@ -53,7 +36,7 @@ HAVING COALESCE(AVG(Voti.valutazione), 0) >= ?8
                     ) + (
                         CASE
                             WHEN LOWER(
-                                CONCAT(Autori.nomeAutore, ' ', Autori.cognomeAutore)
+                                CONCAT(Autori.nome, ' ', Autori.cognome)
                             ) LIKE LOWER(CONCAT('%', ?1, '%')) THEN 3
                             ELSE 0
                         END
@@ -84,7 +67,7 @@ ORDER BY (
                 ) + (
                     CASE
                         WHEN LOWER(
-                            CONCAT(Autori.nomeAutore, ' ', Autori.cognomeAutore)
+                            CONCAT(Autori.nome, ' ', Autori.cognome)
                         ) LIKE LOWER(CONCAT('%', ?1, '%')) THEN 3
                         ELSE 0
                     END
@@ -99,3 +82,4 @@ ORDER BY (
         END
     ) DESC,
     COALESCE(AVG(Voti.valutazione), 0) DESC
+LIMIT ?11
